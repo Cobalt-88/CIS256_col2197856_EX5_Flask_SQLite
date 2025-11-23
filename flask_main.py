@@ -121,6 +121,7 @@ def searchchoices():
 
 
 # note, just a helper function, not used as a route
+# ADDED: Complete By Title  By Publisher search routing with dynamic dropdowns
 def search_router(searchtype):
     db = BooksDB()
     if searchtype == 'byAuthor':
@@ -135,7 +136,7 @@ def search_router(searchtype):
         form.publisher_choice.choices = db.getpublishers()
         return render_template('bypublisher.html', form=form)
 
-
+# ADDED: Results handling for By Title and By Publisher searches
 @app.route('/results/<option>', methods=['POST'])
 def search_results(option=None):
     db = BooksDB()
