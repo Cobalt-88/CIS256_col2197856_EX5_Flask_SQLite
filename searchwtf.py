@@ -15,9 +15,17 @@ class ByAuthorIdWTF(FlaskForm):
 
 
 class ByPublisherIdWTF(FlaskForm):
-    pass
+    # This will become the dropdown menu of publishers
+    publisher_choice = SelectField(
+        "Select Publisher",
+        coerce=int, # converts the value to integer publisher_id
+        validators=[DataRequired()]
+    )
 
 class ByTitleWTF(FlaskForm):
-    # This will also need a stringfield for the words the user types
-    pass
+    # Simple text box user types part of a title
+    title_search = StringField(
+        "Title Contains",  # label shown on the form
+        validators=[DataRequired()]
+    )
 
