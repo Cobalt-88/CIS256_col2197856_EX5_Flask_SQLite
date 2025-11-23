@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Title Search Results</title>
+    <style>
+        table { border-collapse: collapse; width: 90%; margin: 20px 0; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+        th { background-color: #0066cc; color: white; }
+    </style>
+</head>
+<body>
+    <h2>Books Found by Title</h2>
+
+    {% if data %}
+        <table>
+            <tr>
+                <th>Title</th>
+                <th>Year</th>
+                <th>Author(s)</th>
+                <th>Publisher</th>
+            </tr>
+            {% for book in data %}
+            <tr>
+                <td><strong>{{ book.title }}</strong></td>
+                <td>{{ book.year or '—' }}</td>
+                <td>{{ book.author }}</td>
+                <td>{{ book.publisher }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p><em>No books found matching your search.</em></p>
+    {% endif %}
+
+    <br>
+    <a href="{{ url_for('searchchoices') }}">← New Search</a>
+</body>
+</html>

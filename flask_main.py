@@ -1,13 +1,14 @@
 from flask import Flask, render_template, request, url_for, redirect, session
 from string import Template
 from loginwtf import LoginWTF
-from searchwtf import SearchWTF,ByAuthorIdWTF
+from searchwtf import SearchWTF, ByAuthorIdWTF, ByTitleWTF, ByPublisherIdWTF
 from booksdb import BooksDB
 from flask_session import Session
 from flask_bcrypt import Bcrypt
 from wtforms import StringField, TextAreaField, DateField,DecimalField,FloatField,IntegerField,RadioField,SelectField
 from wtforms import HiddenField,PasswordField
 
+# FIXED  Added By Title + By Publisher searches, fixed imports
 app = Flask(__name__)
 bcrypter = Bcrypt(app)
 
@@ -121,29 +122,34 @@ def searchchoices():
 
 # note, just a helper function, not used as a route
 def search_router(searchtype):
+    db = BooksDB()
     if searchtype == 'byAuthor':
-        byauthorform = ByAuthorIdWTF()
-        return render_template('byauthor.html', form=byauthorform)
+        form = ByAuthorIdWTF()
+        form.author_choice.choices = db.getauthors()
+        return render_template('byauthor.html', form=form)
     elif searchtype == 'byTitle':
-        return "You Choose by Title"
+        form = ByTitleWTF()
+        return render_template('bytitle.html', form=form)
     elif searchtype == 'byPublisher':
-        return "You Choose by Publisher"
+        form = ByPublisherIdWTF()
+        form.publisher_choice.choices = db.getpublishers()
+        return render_template('bypublisher.html', form=form)
 
 
 @app.route('/results/<option>', methods=['POST'])
 def search_results(option=None):
-    if option is None:
-        return "Something went wrong"
-    elif option == "booksbyauthorid":
-        mydb = BooksDB()
-        books = mydb.getbooksbyauthorid(request.form['author_choice'])
+    db = BooksDB()
+    if option == "booksbyauthorid":
+        books = db.getbooksbyauthorid(request.form['author_choice'])
         return render_template('booksbyauthorid.html', data=books)
     elif option == "booksbypublisherid":
-        return "Should list books by publisherid"
+        books = db.getbooksbypublisherid(request.form['publisher_choice'])
+        return render_template('booksbypublisherid.html', data=books)
     elif option == "booksbytitle":
-        return "Should list books by title"
-
-
+        books = db.getbooksbytitle(request.form['title_search'])
+        return render_template('booksbytitle.html', data=books)
+    else:
+        return "Invalid option"
 
 
 if __name__ == "__main__":

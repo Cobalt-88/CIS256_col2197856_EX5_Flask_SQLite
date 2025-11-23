@@ -3,29 +3,17 @@ from wtforms import StringField, SelectField, BooleanField
 from wtforms.validators import DataRequired
 from booksdb import BooksDB
 
+# REMOVED all BooksDB() and .getauthors() calls  was causing crash
 class SearchWTF(FlaskForm):
-    myoptions = [(None, "Choose your Search Type"), ('byAuthor','By Author'),('byTitle','By Title'),
-                 ('byPublisher','By Publisher')]
-    search_choice = SelectField("SearchChoice", choices=myoptions,validators=[DataRequired()] )
+    myoptions = [(None, "Choose your Search Type"), ('byAuthor','By Author'),('byTitle','By Title'),('byPublisher','By Publisher')]
+    search_choice = SelectField("SearchChoice", choices=myoptions, validators=[DataRequired()])
 
 class ByAuthorIdWTF(FlaskForm):
-    mydb = BooksDB()
-    authors = mydb.getauthors()
-    author_choice = SelectField("AuthorChoice", choices=authors)
-
+    author_choice = SelectField("Select Author", coerce=int, validators=[DataRequired()])
 
 class ByPublisherIdWTF(FlaskForm):
-    # This will become the dropdown menu of publishers
-    publisher_choice = SelectField(
-        "Select Publisher",
-        coerce=int, # converts the value to integer publisher_id
-        validators=[DataRequired()]
-    )
+    publisher_choice = SelectField("Select Publisher", coerce=int, validators=[DataRequired()])
 
 class ByTitleWTF(FlaskForm):
-    # Simple text box user types part of a title
-    title_search = StringField(
-        "Title Contains",  # label shown on the form
-        validators=[DataRequired()]
-    )
+    title_search = StringField("Title Contains", validators=[DataRequired()])
 
